@@ -16,10 +16,10 @@ public class RequestHelper {
 
     private static final String TAG = "requestHelper";
 
-    private static final String host = "http://192.168.0.37";
+    private static final String host = "http://192.168.0.62";
     private static final String UrlLogin = "/api/login";
     private static final String UrlUser = "/api/user";
-    private static final String UrlPizza = "api/pizza";
+    private static final String UrlPizza = "/api/pizza";
 
     public static void apiLogin(String login, String password, final ApiInterface.onComplete callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
@@ -135,15 +135,24 @@ public class RequestHelper {
                 callback.onFail(error);
             }
         });
-        if (pizzaId != null) {
-            JSONObject JSONtoSend = new JSONObject();
-            try {
-                JSONtoSend.put("token", token);
-            } catch (JSONException e) {
-                Log.e(TAG, "onClick: exn " + e.getMessage());
-            }
-            getter.execute(host + UrlUser, JSONtoSend.toString());
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("token", token);
+        } catch (JSONException e) {
+            Log.e(TAG, "onClick: exn " + e.getMessage());
+            callback.onFail("Ошибка вложения токена");
+            return;
         }
+        if (pizzaId != null) {
+            try {
+                JSONtoSend.put("id", pizzaId);
+            } catch (JSONException e) {
+                Log.d(TAG, "apiGetPizza: " + e.getMessage());
+                callback.onFail("Ошибка вложения id пиццы");
+                return;
+            }
+        }
+        getter.execute(host + UrlPizza, JSONtoSend.toString());
     }
 
 

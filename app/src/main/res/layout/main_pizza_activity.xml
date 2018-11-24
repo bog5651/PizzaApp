@@ -38,6 +38,7 @@
         app:layout_constraintVertical_bias="0.016" />
 
     <ListView
+        android:id="@+id/lvPizzas"
         android:layout_width="277dp"
         android:layout_height="317dp"
         android:layout_marginBottom="8dp"
