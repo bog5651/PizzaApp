@@ -17,6 +17,8 @@ public class GetterJSON extends AsyncTask<String, Void, String> {
 
     public interface onCompleteEventHandler {
         void onComplete(String Json);
+
+        void onFail(String error);
     }
 
     private onCompleteEventHandler callBack;
@@ -24,6 +26,9 @@ public class GetterJSON extends AsyncTask<String, Void, String> {
     private Button btn;
     private String LOG_TAG = "GetterJSON";
     private String requestMethod = "POST";
+    private ErrorType errorType = ErrorType.NoError;
+
+    private enum ErrorType {InternetError, TimeOutError, RequestError, NoError}
 
     public GetterJSON(ProgressBar pgLoading, Button btn, onCompleteEventHandler callBack, String requestMethod) {
         this.pgLoading = pgLoading;
@@ -79,13 +84,16 @@ public class GetterJSON extends AsyncTask<String, Void, String> {
                 }
             } else {
                 Log.e(LOG_TAG, "responseCode = " + responseCode);
+                errorType = ErrorType.RequestError;
                 return null;
             }
         } catch (Exception e) {
             Log.e(LOG_TAG, "Ошибка " + Arrays.toString(e.getStackTrace()));
             Log.e(LOG_TAG, "doInBackground: " + e.getMessage());
+            errorType = ErrorType.TimeOutError;
             return null;
         }
+        errorType = ErrorType.NoError;
         return JSon.toString();
     }
 
@@ -96,6 +104,10 @@ public class GetterJSON extends AsyncTask<String, Void, String> {
             pgLoading.setVisibility(View.GONE);     // To Hide ProgressBar
         if (btn != null)
             btn.setEnabled(true);
-        callBack.onComplete(s);
+        if (errorType == ErrorType.NoError)
+            callBack.onComplete(s);
+        else {
+            callBack.onFail("Произошла ошибка типа " + errorType);
+        }
     }
 }

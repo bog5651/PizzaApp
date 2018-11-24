@@ -17,9 +17,9 @@ public class SharedPreferencesHelper {
         edit.apply();
     }
 
-    public static String getLogin(Context context) {
+    public static String getLogin(Context context, String def) {
         SharedPreferences sp = context.getSharedPreferences(APP_TAG, Context.MODE_PRIVATE);
-        return sp.getString(TAG_LOGIN, null);
+        return sp.getString(TAG_LOGIN, def);
     }
 
     public static void removeLogin(Context context) {
@@ -27,6 +27,11 @@ public class SharedPreferencesHelper {
         SharedPreferences.Editor editor = sp.edit();
         editor.remove(TAG_LOGIN);
         editor.apply();
+    }
+
+    public static boolean hasLogin(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(APP_TAG, Context.MODE_PRIVATE);
+        return sp.contains(TAG_LOGIN);
     }
 
     public static void putToken(Context context, String value) {
@@ -39,6 +44,11 @@ public class SharedPreferencesHelper {
     public static String getToken(Context context) {
         SharedPreferences sp = context.getSharedPreferences(APP_TAG, Context.MODE_PRIVATE);
         return sp.getString(TAG_TOKEN, null);
+    }
+
+    public static boolean hssToken(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(APP_TAG, Context.MODE_PRIVATE);
+        return sp.contains(TAG_TOKEN);
     }
 
     public static void removeToken(Context context) {

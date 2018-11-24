@@ -2,11 +2,15 @@ package com.example.evgeniy.mypizzamegaapp.Helpers;
 
 import android.util.Log;
 
+import com.example.evgeniy.mypizzamegaapp.Models.Pizza;
 import com.example.evgeniy.mypizzamegaapp.Models.User;
 import com.example.evgeniy.mypizzamegaapp.Tasks.GetterJSON;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class RequestHelper {
 
@@ -15,6 +19,7 @@ public class RequestHelper {
     private static final String host = "http://192.168.0.37";
     private static final String UrlLogin = "/api/login";
     private static final String UrlUser = "/api/user";
+    private static final String UrlPizza = "api/pizza";
 
     public static void apiLogin(String login, String password, final ApiInterface.onComplete callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
@@ -36,6 +41,11 @@ public class RequestHelper {
                     Log.e(TAG, "onComplete: exn " + e.getMessage());
                     callback.onFail(e.getMessage());
                 }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
             }
         });
         JSONObject JSONtoSend = new JSONObject();
@@ -75,6 +85,11 @@ public class RequestHelper {
                     callback.onFail(e.getMessage());
                 }
             }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
         });
         JSONObject JSONtoSend = new JSONObject();
         try {
@@ -84,6 +99,53 @@ public class RequestHelper {
         }
         getter.execute(host + UrlUser, JSONtoSend.toString());
     }
+
+    public static void apiGetPizza(String token, final String pizzaId, final ApiInterface.onCompleteGetPizza callback) {
+        GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        JSONArray JSONPizzas = result.getJSONArray("pizzas");
+                        ArrayList<Pizza> pizzas = new ArrayList<>();
+                        for (int i = 0; i < JSONPizzas.length(); i++) {
+                            Pizza pizza = new Pizza();
+                            pizza.PizzaId = JSONPizzas.getJSONObject(i).getInt("id");
+                            pizza.PizzaName = JSONPizzas.getJSONObject(i).getString("name");
+                            pizza.PizzaCost = JSONPizzas.getJSONObject(i).getDouble("cost");
+                            pizzas.add(pizza);
+                        }
+                        callback.onSuccess(pizzas);
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        if (pizzaId != null) {
+            JSONObject JSONtoSend = new JSONObject();
+            try {
+                JSONtoSend.put("token", token);
+            } catch (JSONException e) {
+                Log.e(TAG, "onClick: exn " + e.getMessage());
+            }
+            getter.execute(host + UrlUser, JSONtoSend.toString());
+        }
+    }
+
 
     private static String formatError(JSONObject error) throws JSONException {
         String message = "";
@@ -104,6 +166,10 @@ public class RequestHelper {
 
         public interface onCompleteGetUser extends onFail {
             void onSuccess(User u);
+        }
+
+        public interface onCompleteGetPizza extends onFail {
+            void onSuccess(ArrayList<Pizza> p);
         }
     }
 }
