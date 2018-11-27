@@ -26,6 +26,9 @@
         <activity
             android:name=".Activity.MainPizza"
             android:label="Pizza" />
+        <activity
+            android:name=".Activity.RegisterActivity"
+            android:label="Register" />
     </application>
 
 </manifest>

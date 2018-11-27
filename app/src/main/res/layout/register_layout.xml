@@ -27,14 +27,29 @@
         android:hint="@string/password"
         android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/btnLogin"
+    <EditText
+        android:id="@+id/etFirstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="225dp"
-        android:text="@string/Login" />
+        android:background="@android:color/darker_gray"
+        android:ems="10"
+        android:hint="@string/name"
+        android:inputType="textPassword" />
+
+    <EditText
+        android:id="@+id/etSecondName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="265dp"
+        android:background="@android:color/darker_gray"
+        android:ems="10"
+        android:hint="@string/secondname"
+        android:inputType="textPassword" />
 
     <Button
         android:id="@+id/btnRegister"
@@ -42,6 +57,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="275dp"
+        android:layout_marginTop="305dp"
         android:text="@string/register" />
 </RelativeLayout>

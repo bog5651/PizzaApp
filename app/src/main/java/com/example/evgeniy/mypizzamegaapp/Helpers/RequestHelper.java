@@ -20,6 +20,7 @@ public class RequestHelper {
     private static final String UrlLogin = "/api/login";
     private static final String UrlUser = "/api/user";
     private static final String UrlPizza = "/api/pizza";
+    private static final String UrlRegister = "/api/register";
 
     public static void apiLogin(String login, String password, final ApiInterface.onComplete callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
@@ -155,6 +156,49 @@ public class RequestHelper {
         getter.execute(host + UrlPizza, JSONtoSend.toString());
     }
 
+    public static void apiRegister(String login, String password, String firstName, String secondName, final ApiInterface.onComplete callback) {
+        GetterJSON getterJSON = new GetterJSON(new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        String token = result.getString("token");
+                        if (!token.equals(""))
+                            callback.onSuccess(token);
+                        else
+                            callback.onFail("Вернулся пустой токен");
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("login", login);
+            JSONtoSend.put("password", password);
+            JSONtoSend.put("firstname", firstName);
+            JSONtoSend.put("secondname", secondName);
+        } catch (JSONException e) {
+            Log.e(TAG, "onClick: exn " + e.getMessage());
+            callback.onFail("Ошибка вложения данных" + e.getMessage());
+            return;
+        }
+        getterJSON.execute(host + UrlRegister, JSONtoSend.toString());
+    }
 
     private static String formatError(JSONObject error) throws JSONException {
         String message = "";

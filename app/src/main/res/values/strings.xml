@@ -3,4 +3,9 @@
     <string name="Login">Войти</string>
     <string name="Use_Token">Использовать токен</string>
     <string name="LogOut">Выйти</string>
+    <string name="register">Регистрация</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="name">Имя</string>
+    <string name="secondname">Фамилия</string>
 </resources>

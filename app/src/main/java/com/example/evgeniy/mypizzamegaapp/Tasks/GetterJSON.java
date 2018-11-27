@@ -38,9 +38,16 @@ public class GetterJSON extends AsyncTask<String, Void, String> {
     }
 
     public GetterJSON(ProgressBar pgLoading, Button btn, onCompleteEventHandler callBack) {
-        this.pgLoading = pgLoading;
         this.callBack = callBack;
         this.btn = btn;
+        this.pgLoading = pgLoading;
+    }
+
+    public GetterJSON(onCompleteEventHandler callBack) {
+        this.callBack = callBack;
+        this.btn = null;
+        this.pgLoading = null;
+
     }
 
     public void setRequestMethod(String requestMethod) {
