@@ -3,6 +3,7 @@ package com.example.evgeniy.mypizzamegaapp.Helpers;
 import android.util.Log;
 
 import com.example.evgeniy.mypizzamegaapp.Models.Pizza;
+import com.example.evgeniy.mypizzamegaapp.Models.Product;
 import com.example.evgeniy.mypizzamegaapp.Models.User;
 import com.example.evgeniy.mypizzamegaapp.Tasks.GetterJSON;
 
@@ -21,6 +22,7 @@ public class RequestHelper {
     private static final String UrlUser = "/api/user";
     private static final String UrlPizza = "/api/pizza";
     private static final String UrlRegister = "/api/register";
+    private static final String UrlPizzaStructure = "/api/PizzaStructute";
 
     public static void apiLogin(String login, String password, final ApiInterface.onComplete callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
@@ -77,6 +79,7 @@ public class RequestHelper {
                         user.id_user = jsonUser.getInt("id_user");
                         user.login = jsonUser.getString("login");
                         user.secondname = jsonUser.getString("secondname");
+                        user.role = jsonUser.getString("name");
                         callback.onSuccess(user);
                     } else {
                         callback.onFail(formatError(result.getJSONObject("error")));
@@ -200,6 +203,60 @@ public class RequestHelper {
         getterJSON.execute(host + UrlRegister, JSONtoSend.toString());
     }
 
+    public static void apiGetPizzaStruct(String token, int pizzaId, final ApiInterface.onCompleteGetPizzaStruct callback) {
+        GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        JSONArray JSONPizzas = result.getJSONArray("pizza");
+                        ArrayList<Product> products = new ArrayList<>();
+                        for (int i = 0; i < JSONPizzas.length(); i++) {
+                            Product product = new Product();
+                            product.name = JSONPizzas.getJSONObject(i).getString("product_name");
+                            product.count = JSONPizzas.getJSONObject(i).getInt("count_product");
+                            product.unit = JSONPizzas.getJSONObject(i).getString("unit");
+                            products.add(product);
+                        }
+                        callback.onSuccess(products);
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("token", token);
+        } catch (JSONException e) {
+            Log.e(TAG, "apiGetPizzaStructure: exp " + e.getMessage());
+            callback.onFail("Ошибка вложения токена");
+            return;
+        }
+        try {
+            JSONtoSend.put("id", pizzaId);
+        } catch (JSONException e) {
+            Log.d(TAG, "apiGetPizzaStructure: " + e.getMessage());
+            callback.onFail("Ошибка вложения id пиццы");
+            return;
+        }
+        getter.execute(host + UrlPizzaStructure, JSONtoSend.toString());
+    }
+
+
     private static String formatError(JSONObject error) throws JSONException {
         String message = "";
         message = message + "code: " + error.getInt("code") + "\n";
@@ -223,6 +280,10 @@ public class RequestHelper {
 
         public interface onCompleteGetPizza extends onFail {
             void onSuccess(ArrayList<Pizza> p);
+        }
+
+        public interface onCompleteGetPizzaStruct extends onFail {
+            void onSuccess(ArrayList<Product> products);
         }
     }
 }

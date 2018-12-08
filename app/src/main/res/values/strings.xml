@@ -8,4 +8,6 @@
     <string name="password">Пароль</string>
     <string name="name">Имя</string>
     <string name="secondname">Фамилия</string>
+    <string name="back">Back</string>
+    <string name="error">Error</string>
 </resources>

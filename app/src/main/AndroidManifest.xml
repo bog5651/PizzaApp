@@ -25,10 +25,13 @@
             android:label="@string/Login" />
         <activity
             android:name=".Activity.MainPizza"
-            android:label="Pizza" />
+            android:label="Pizza main" />
         <activity
             android:name=".Activity.RegisterActivity"
             android:label="Register" />
+        <activity
+            android:name=".Activity.PizzaStructure"
+            android:label="Pizza struct" />
     </application>
 
 </manifest>

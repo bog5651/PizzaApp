@@ -5,4 +5,5 @@ public class User {
     public int id_user;
     public String firstname;
     public String secondname;
+    public String role;
 }

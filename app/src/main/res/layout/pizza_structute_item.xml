@@ -2,28 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:gravity="top|center_horizontal">
+    android:gravity="top|center_horizontal|center_vertical">
 
     <TextView
-        android:id="@+id/PizzaName"
+        android:id="@+id/ProductName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="90"
+        android:layout_weight="80"
         android:text="@+id/label" />
 
     <TextView
-        android:id="@+id/PizzaCost"
+        android:id="@+id/ProductCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10"
         android:text="@+id/label" />
 
     <TextView
-        android:id="@+id/PizzaId"
+        android:id="@+id/ProductUnit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
-        android:text="TextView"
-        android:visibility="gone" />
+        android:layout_weight="10" />
 
 </LinearLayout>
