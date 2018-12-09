@@ -8,15 +8,13 @@
         android:id="@+id/PizzaName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="90"
-        android:text="@+id/label" />
+        android:layout_weight="90"/>
 
     <TextView
         android:id="@+id/PizzaCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:text="@+id/label" />
+        android:layout_weight="10"/>
 
     <TextView
         android:id="@+id/PizzaId"

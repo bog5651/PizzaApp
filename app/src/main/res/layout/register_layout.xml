@@ -36,8 +36,7 @@
         android:layout_marginTop="225dp"
         android:background="@android:color/darker_gray"
         android:ems="10"
-        android:hint="@string/name"
-        android:inputType="textPassword" />
+        android:hint="@string/name" />
 
     <EditText
         android:id="@+id/etSecondName"
@@ -48,8 +47,7 @@
         android:layout_marginTop="265dp"
         android:background="@android:color/darker_gray"
         android:ems="10"
-        android:hint="@string/secondname"
-        android:inputType="textPassword" />
+        android:hint="@string/secondname" />
 
     <Button
         android:id="@+id/btnRegister"

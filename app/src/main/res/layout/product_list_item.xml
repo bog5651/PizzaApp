@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="30dp"
-    android:gravity="top|center_horizontal|center_vertical">
+    android:gravity="top|center_horizontal">
 
     <TextView
         android:id="@+id/ProductName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="80"/>
+        android:layout_weight="70" />
 
     <TextView
-        android:id="@+id/ProductCount"
+        android:id="@+id/ProductCost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10" />
+        android:layout_weight="20" />
 
-    <TextView
-        android:id="@+id/ProductUnit"
+    <Switch
+        android:id="@+id/swSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="10" />

@@ -51,7 +51,7 @@ public class PizzaStructure extends AppCompatActivity {
         if (login != null)
             tvLogin.setText(login);
 
-        RequestHelper.apiGetPizzaStruct(SharedPreferencesHelper.getToken(this), pizzaId, new RequestHelper.ApiInterface.onCompleteGetPizzaStruct() {
+        RequestHelper.apiGetPizzaStruct(SharedPreferencesHelper.getToken(this), pizzaId, new RequestHelper.ApiInterface.onCompleteGetProductList() {
             @Override
             public void onSuccess(ArrayList<Product> products) {
                 lvPizzaStruct.setAdapter(new PizzaStructureAdapter(context, products));

@@ -32,6 +32,9 @@
         <activity
             android:name=".Activity.PizzaStructure"
             android:label="Pizza struct" />
+        <activity
+            android:name=".Activity.AddPizzaActivity"
+            android:label="Add Pizza" />
     </application>
 
 </manifest>

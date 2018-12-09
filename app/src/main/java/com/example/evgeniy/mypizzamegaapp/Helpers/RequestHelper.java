@@ -24,6 +24,7 @@ public class RequestHelper {
     private static final String UrlRegister = "/api/register";
     private static final String UrlPizzaStructure = "/api/PizzaStructute";
     private static final String UrlLogout = "/api/logout";
+    private static final String UrlProduct = "/api/product";
 
     public static void apiLogin(String login, String password, final ApiInterface.onCompleteWithResult callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
@@ -116,7 +117,7 @@ public class RequestHelper {
                 try {
                     JSONObject result = new JSONObject(Json);
                     if (result.getInt("success") == 1) {
-                        JSONArray JSONPizzas = result.getJSONArray("pizzas");
+                        JSONArray JSONPizzas = result.getJSONArray("pizza");
                         ArrayList<Pizza> pizzas = new ArrayList<>();
                         for (int i = 0; i < JSONPizzas.length(); i++) {
                             Pizza pizza = new Pizza();
@@ -158,6 +159,66 @@ public class RequestHelper {
             }
         }
         getter.execute(host + UrlPizza, JSONtoSend.toString());
+    }
+
+    public static void apiGetProduct(String token, final String productId, final ApiInterface.onCompleteGetProductList callback) {
+        GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        JSONArray JSONPizzas = result.getJSONArray("product");
+                        ArrayList<Product> products = new ArrayList<>();
+                        for (int i = 0; i < JSONPizzas.length(); i++) {
+                            Product product = new Product();
+                            try {
+                                product.id = JSONPizzas.getJSONObject(i).getInt("id");
+                            } catch (JSONException e) {
+                                Log.d(TAG, "onComplete: " + e.getMessage());
+                            }
+                            product.name = JSONPizzas.getJSONObject(i).getString("product_name");
+                            product.cost = JSONPizzas.getJSONObject(i).getInt("cost");
+                            product.unit = JSONPizzas.getJSONObject(i).getString("unit");
+                            products.add(product);
+                        }
+                        callback.onSuccess(products);
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCompleteWithResult: " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("token", token);
+        } catch (JSONException e) {
+            Log.e(TAG, "onClick: exn " + e.getMessage());
+            callback.onFail("Ошибка вложения токена");
+            return;
+        }
+        if (productId != null) {
+            try {
+                JSONtoSend.put("id", productId);
+            } catch (JSONException e) {
+                Log.d(TAG, "apiGetPizza: " + e.getMessage());
+                callback.onFail("Ошибка вложения id пиццы");
+                return;
+            }
+        }
+        getter.execute(host + UrlProduct, JSONtoSend.toString());
     }
 
     public static void apiRegister(String login, String password, String firstName, String secondName, final ApiInterface.onCompleteWithResult callback) {
@@ -204,7 +265,7 @@ public class RequestHelper {
         getterJSON.execute(host + UrlRegister, JSONtoSend.toString());
     }
 
-    public static void apiGetPizzaStruct(String token, int pizzaId, final ApiInterface.onCompleteGetPizzaStruct callback) {
+    public static void apiGetPizzaStruct(String token, int pizzaId, final ApiInterface.onCompleteGetProductList callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
             @Override
             public void onComplete(String Json) {
@@ -322,7 +383,7 @@ public class RequestHelper {
             void onSuccess(ArrayList<Pizza> p);
         }
 
-        public interface onCompleteGetPizzaStruct extends onFail {
+        public interface onCompleteGetProductList extends onFail {
             void onSuccess(ArrayList<Product> products);
         }
     }

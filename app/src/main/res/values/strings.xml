@@ -10,4 +10,5 @@
     <string name="secondname">Фамилия</string>
     <string name="back">Back</string>
     <string name="error">Error</string>
+    <string name="addPizza">Добавить пиццу</string>
 </resources>

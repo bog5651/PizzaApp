@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ public class MainPizza extends AppCompatActivity {
 
     private TextView tvLogin;
     private ListView lvPizzas;
+    private Button btnLogout;
+    private Button btnAddPizza;
 
     private PizzaListAdapter pizzaAdapter;
 
@@ -42,7 +45,7 @@ public class MainPizza extends AppCompatActivity {
         setContentView(R.layout.main_pizza_activity);
 
         tvLogin = findViewById(R.id.tvLogin);
-        findViewById(R.id.btnLogOut).setOnClickListener(new View.OnClickListener() {
+        (btnLogout = findViewById(R.id.btnLogOut)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestHelper.apiLogout(SharedPreferencesHelper.getToken(context), new RequestHelper.ApiInterface.onComplete() {
@@ -66,6 +69,15 @@ public class MainPizza extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+            }
+        });
+
+        btnAddPizza = findViewById(R.id.btnAddPizza);
+        btnAddPizza.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, AddPizzaActivity.class);
+                startActivity(intent);
             }
         });
 
