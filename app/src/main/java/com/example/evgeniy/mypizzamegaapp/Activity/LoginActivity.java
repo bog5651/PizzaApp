@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestHelper.apiLogin(etLogin.getText().toString(), etPassword.getText().toString(), new RequestHelper.ApiInterface.onComplete() {
+                RequestHelper.apiLogin(etLogin.getText().toString(), etPassword.getText().toString(), new RequestHelper.ApiInterface.onCompleteWithResult() {
                     @Override
                     public void onSuccess(String result) {
                         SharedPreferencesHelper.putToken(context, result);

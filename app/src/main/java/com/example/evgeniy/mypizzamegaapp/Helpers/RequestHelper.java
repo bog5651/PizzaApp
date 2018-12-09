@@ -23,8 +23,9 @@ public class RequestHelper {
     private static final String UrlPizza = "/api/pizza";
     private static final String UrlRegister = "/api/register";
     private static final String UrlPizzaStructure = "/api/PizzaStructute";
+    private static final String UrlLogout = "/api/logout";
 
-    public static void apiLogin(String login, String password, final ApiInterface.onComplete callback) {
+    public static void apiLogin(String login, String password, final ApiInterface.onCompleteWithResult callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
             @Override
             public void onComplete(String Json) {
@@ -41,7 +42,7 @@ public class RequestHelper {
                         callback.onFail(formatError(result.getJSONObject("error")));
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "onComplete: exn " + e.getMessage());
+                    Log.e(TAG, "onCompleteWithResult: exn " + e.getMessage());
                     callback.onFail(e.getMessage());
                 }
             }
@@ -85,7 +86,7 @@ public class RequestHelper {
                         callback.onFail(formatError(result.getJSONObject("error")));
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    Log.e(TAG, "onCompleteWithResult: " + e.getMessage());
                     callback.onFail(e.getMessage());
                 }
             }
@@ -129,7 +130,7 @@ public class RequestHelper {
                         callback.onFail(formatError(result.getJSONObject("error")));
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    Log.e(TAG, "onCompleteWithResult: " + e.getMessage());
                     callback.onFail(e.getMessage());
                 }
             }
@@ -159,7 +160,7 @@ public class RequestHelper {
         getter.execute(host + UrlPizza, JSONtoSend.toString());
     }
 
-    public static void apiRegister(String login, String password, String firstName, String secondName, final ApiInterface.onComplete callback) {
+    public static void apiRegister(String login, String password, String firstName, String secondName, final ApiInterface.onCompleteWithResult callback) {
         GetterJSON getterJSON = new GetterJSON(new GetterJSON.onCompleteEventHandler() {
             @Override
             public void onComplete(String Json) {
@@ -228,7 +229,7 @@ public class RequestHelper {
                         callback.onFail(formatError(result.getJSONObject("error")));
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    Log.e(TAG, "onCompleteWithResult: " + e.getMessage());
                     callback.onFail(e.getMessage());
                 }
             }
@@ -256,6 +257,41 @@ public class RequestHelper {
         getter.execute(host + UrlPizzaStructure, JSONtoSend.toString());
     }
 
+    public static void apiLogout(String token, final ApiInterface.onComplete callback) {
+        GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCompleteWithResult: exn " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("token", token);
+        } catch (JSONException e) {
+            Log.e(TAG, "onClick: exn " + e.getMessage());
+            callback.onFail(e.getMessage());
+        }
+        getter.execute(host + UrlLogout, JSONtoSend.toString());
+    }
 
     private static String formatError(JSONObject error) throws JSONException {
         String message = "";
@@ -270,8 +306,12 @@ public class RequestHelper {
             void onFail(String error);
         }
 
-        public interface onComplete extends onFail {
+        public interface onCompleteWithResult extends onFail {
             void onSuccess(String result);
+        }
+
+        public interface onComplete extends onFail {
+            void onSuccess();
         }
 
         public interface onCompleteGetUser extends onFail {

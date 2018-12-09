@@ -44,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
                         etPassword.getText().toString().trim(),
                         etFirstName.getText().toString().trim(),
                         etSecondName.getText().toString().trim(),
-                        new RequestHelper.ApiInterface.onComplete() {
+                        new RequestHelper.ApiInterface.onCompleteWithResult() {
                             @Override
                             public void onSuccess(String result) {
                                 SharedPreferencesHelper.putToken(context, result);

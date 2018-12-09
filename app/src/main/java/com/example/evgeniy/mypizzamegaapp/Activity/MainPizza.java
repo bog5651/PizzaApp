@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -33,6 +34,8 @@ public class MainPizza extends AppCompatActivity {
 
     private Context context = this;
 
+    private static final String TAG = "MainPizza";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,10 +45,27 @@ public class MainPizza extends AppCompatActivity {
         findViewById(R.id.btnLogOut).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferencesHelper.logout(context);
-                Intent intent = new Intent(context, LoginActivity.class);
-                intent.putExtra("login", SharedPreferencesHelper.getLogin(context, ""));
-                startActivity(intent);
+                RequestHelper.apiLogout(SharedPreferencesHelper.getToken(context), new RequestHelper.ApiInterface.onComplete() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, "Logout onSuccess: ");
+                        SharedPreferencesHelper.logout(context);
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+                        intent.putExtra("login", SharedPreferencesHelper.getLogin(context, ""));
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFail(String error) {
+                        Log.d(TAG, "Logout onSuccess: ");
+                        SharedPreferencesHelper.logout(context);
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+                        intent.putExtra("login", SharedPreferencesHelper.getLogin(context, ""));
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
