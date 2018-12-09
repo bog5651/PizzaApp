@@ -35,7 +35,7 @@ public class RequestHelper {
                 try {
                     JSONObject result = new JSONObject(Json);
                     if (result.getInt("success") == 1) {
-                        String token = result.getJSONObject("data").getString("token");
+                        String token = result.getString("token");
                         callback.onSuccess(token);
                     } else {
                         callback.onFail(formatError(result.getJSONObject("error")));
@@ -179,7 +179,7 @@ public class RequestHelper {
                         callback.onFail(formatError(result.getJSONObject("error")));
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG, "onComplete: " + e.getMessage());
+                    Log.e(TAG, "onFail: " + e.getMessage());
                     callback.onFail(e.getMessage());
                 }
             }

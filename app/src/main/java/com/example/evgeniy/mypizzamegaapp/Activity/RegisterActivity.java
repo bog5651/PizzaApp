@@ -28,7 +28,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.register_layout);
-        //TODO принимать логин и пароль если они пришли и вписывать их в поля
+        Intent intent = getIntent();
+        String login = intent.getStringExtra("login");
         etLogin = findViewById(R.id.etLogin);
         etPassword = findViewById(R.id.etPassword);
         etFirstName = findViewById(R.id.etFirstName);
@@ -61,5 +62,9 @@ public class RegisterActivity extends AppCompatActivity {
                         });
             }
         });
+
+        if (login != null) {
+            etLogin.setText(login.trim());
+        }
     }
 }

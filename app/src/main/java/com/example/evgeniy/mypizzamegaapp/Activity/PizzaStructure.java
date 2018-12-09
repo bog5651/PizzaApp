@@ -35,7 +35,7 @@ public class PizzaStructure extends AppCompatActivity {
         setContentView(R.layout.pizza_structure);
         Intent intent = getIntent();
         int pizzaId = intent.getIntExtra("pizzaId", 1);
-        String login = intent.getStringExtra("login");
+        String login = SharedPreferencesHelper.getLogin(context, "");
 
         btnBakc = findViewById(R.id.btnBack);
         tvLogin = findViewById(R.id.tvLogin);
@@ -47,6 +47,7 @@ public class PizzaStructure extends AppCompatActivity {
                 finish();
             }
         });
+
         if (login != null)
             tvLogin.setText(login);
 

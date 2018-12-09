@@ -29,6 +29,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
 
+        Intent intent = getIntent();
+        String login = intent.getStringExtra("login");
+
         etLogin = findViewById(R.id.etLogin);
         etPassword = findViewById(R.id.etPassword);
 
@@ -57,10 +60,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent toAct = new Intent(context, RegisterActivity.class);
-                //TODO передавать логин и пароль если они уже введены
+                toAct.putExtra("login", etLogin.getText().toString().trim());
                 startActivity(toAct);
             }
         });
+
+        if (login != null) {
+            etLogin.setText(login);
+        }
     }
 
 

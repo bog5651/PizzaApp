@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import static android.widget.AdapterView.OnItemClickListener;
 import static com.example.evgeniy.mypizzamegaapp.Adapters.PizzaListAdapter.ItemInfo;
 
-public class MainPizza extends AppCompatActivity implements View.OnClickListener {
+public class MainPizza extends AppCompatActivity {
 
     private TextView tvLogin;
     private ListView lvPizzas;
@@ -39,7 +39,15 @@ public class MainPizza extends AppCompatActivity implements View.OnClickListener
         setContentView(R.layout.main_pizza_activity);
 
         tvLogin = findViewById(R.id.tvLogin);
-        findViewById(R.id.btnLogOut).setOnClickListener(this);
+        findViewById(R.id.btnLogOut).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferencesHelper.logout(context);
+                Intent intent = new Intent(context, LoginActivity.class);
+                intent.putExtra("login", SharedPreferencesHelper.getLogin(context, ""));
+                startActivity(intent);
+            }
+        });
 
         RequestHelper.apiGetPizza(SharedPreferencesHelper.getToken(this), null, new RequestHelper.ApiInterface.onCompleteGetPizza() {
             @Override
@@ -62,22 +70,11 @@ public class MainPizza extends AppCompatActivity implements View.OnClickListener
                 ItemInfo itemInfo = pizzaAdapter.getItemInfo(position);
                 Intent intent = new Intent(context, PizzaStructure.class);
                 intent.putExtra("pizzaId", itemInfo.pizza.PizzaId);
-                intent.putExtra("login", tvLogin.getText().toString());
                 startActivity(intent);
             }
         });
 
         setUserInfo();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnLogOut:
-                SharedPreferencesHelper.logout(context);
-                finish();
-                break;
-        }
     }
 
     private void setUserInfo() {
@@ -86,6 +83,7 @@ public class MainPizza extends AppCompatActivity implements View.OnClickListener
             RequestHelper.apiGetUser(token, new RequestHelper.ApiInterface.onCompleteGetUser() {
                 @Override
                 public void onSuccess(User u) {
+                    SharedPreferencesHelper.putLogin(context, u.login);
                     tvLogin.setText(u.login);
                 }
 
@@ -98,7 +96,9 @@ public class MainPizza extends AppCompatActivity implements View.OnClickListener
             });
         } else {
             SharedPreferencesHelper.logout(context);
-            finish();
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.putExtra("login", SharedPreferencesHelper.getLogin(context, ""));
+            startActivity(intent);
         }
     }
 }
