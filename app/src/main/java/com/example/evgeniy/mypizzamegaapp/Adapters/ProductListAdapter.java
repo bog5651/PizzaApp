@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -16,7 +15,7 @@ import com.example.evgeniy.mypizzamegaapp.R;
 
 import java.util.ArrayList;
 
-public class ProductListAdapter extends ArrayAdapter implements CompoundButton.OnCheckedChangeListener {
+public class ProductListAdapter extends ArrayAdapter implements View.OnClickListener {
 
     private ArrayList<ItemInfo> itemInfos;
     private ArrayList<Product> products;
@@ -58,7 +57,7 @@ public class ProductListAdapter extends ArrayAdapter implements CompoundButton.O
             Switch swSelect = rowView.findViewById(R.id.swSelect);
             tvProductName.setText(String.valueOf(itemInfo.product.name));
             tvProductCount.setText(String.valueOf(itemInfo.product.cost));
-            swSelect.setOnCheckedChangeListener(this);
+            swSelect.setOnClickListener(this);
             swSelect.setTag(position);
             swSelect.setChecked(itemInfo.isSelected);
         } else {
@@ -72,36 +71,47 @@ public class ProductListAdapter extends ArrayAdapter implements CompoundButton.O
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onClick(View v) {
+        Switch aSwitch = (Switch) v;
+
+        ItemInfo itemInfo = (ItemInfo) getItem((int) aSwitch.getTag());
+        if (itemInfo.isSelected != aSwitch.isChecked()) {
+            itemInfo.isSelected = aSwitch.isChecked();
+        }
         if (callBack != null) {
-            ItemInfo itemInfo = (ItemInfo) getItem((int) buttonView.getTag());
-            if (itemInfo.isSelected != isChecked) {
-                itemInfo.isSelected = isChecked;
-                Product checkedProduct = itemInfo.product;
-                callBack.onSwitchChanged(checkedProduct, isChecked);
+            callBack.onSwitchChanged(itemInfo.product, aSwitch.isChecked());
+        }
+
+    }
+
+    public ArrayList<Product> getSelectedProducts() {
+        ArrayList<Product> selected = new ArrayList<>();
+        for (ItemInfo ii : itemInfos) {
+            if (ii.isSelected) {
+                selected.add(ii.product);
             }
         }
+        return selected;
     }
 
-
-        @Override
-        public Object getItem ( int position){
-            return itemInfos.get(position);
-        }
-
-        // кол-во элементов
-        @Override
-        public int getCount () {
-            return itemInfos.size();
-        }
-
-        // id по позиции
-        @Override
-        public long getItemId ( int position){
-            return itemInfos.get(position).product.id;
-        }
-
-        public interface onItemChecked {
-            void onSwitchChanged(Product product, boolean isSelected);
-        }
+    @Override
+    public Object getItem(int position) {
+        return itemInfos.get(position);
     }
+
+    // кол-во элементов
+    @Override
+    public int getCount() {
+        return itemInfos.size();
+    }
+
+    // id по позиции
+    @Override
+    public long getItemId(int position) {
+        return itemInfos.get(position).product.id;
+    }
+
+    public interface onItemChecked {
+        void onSwitchChanged(Product product, boolean isSelected);
+    }
+}

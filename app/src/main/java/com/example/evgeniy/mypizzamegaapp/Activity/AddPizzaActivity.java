@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.evgeniy.mypizzamegaapp.Adapters.ProductListAdapter;
 import com.example.evgeniy.mypizzamegaapp.Helpers.RequestHelper;
@@ -43,7 +44,17 @@ public class AddPizzaActivity extends AppCompatActivity {
         btnAddPizza.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //todo добавить запрос
+                RequestHelper.apiAddPizza(SharedPreferencesHelper.getToken(context), productListAdapter.getSelectedProducts(), etPizzaName.getText().toString().trim(), String.valueOf(Cost), new RequestHelper.ApiInterface.onCompleteWithResult() {
+                    @Override
+                    public void onSuccess(String result) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onFail(String error) {
+                        Toast.makeText(context, "Ошибка добавления пиццы " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 

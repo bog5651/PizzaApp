@@ -27,6 +27,7 @@ import static com.example.evgeniy.mypizzamegaapp.Adapters.PizzaListAdapter.ItemI
 public class MainPizza extends AppCompatActivity {
 
     private TextView tvLogin;
+
     private ListView lvPizzas;
     private Button btnLogout;
     private Button btnAddPizza;
@@ -81,6 +82,30 @@ public class MainPizza extends AppCompatActivity {
             }
         });
 
+        setPizzasInfo();
+
+        lvPizzas = findViewById(R.id.lvPizzas);
+        lvPizzas.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ItemInfo itemInfo = pizzaAdapter.getItemInfo(position);
+                Intent intent = new Intent(context, PizzaStructure.class);
+                intent.putExtra("pizzaId", itemInfo.pizza.PizzaId);
+                startActivity(intent);
+            }
+        });
+
+        setUserInfo();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void setPizzasInfo()
+    {
         RequestHelper.apiGetPizza(SharedPreferencesHelper.getToken(this), null, new RequestHelper.ApiInterface.onCompleteGetPizza() {
             @Override
             public void onSuccess(ArrayList<Pizza> p) {
@@ -95,18 +120,6 @@ public class MainPizza extends AppCompatActivity {
                 Toast.makeText(context, "Ошибка загрузки списка пицц\n" + error, Toast.LENGTH_LONG).show();
             }
         });
-        lvPizzas = findViewById(R.id.lvPizzas);
-        lvPizzas.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ItemInfo itemInfo = pizzaAdapter.getItemInfo(position);
-                Intent intent = new Intent(context, PizzaStructure.class);
-                intent.putExtra("pizzaId", itemInfo.pizza.PizzaId);
-                startActivity(intent);
-            }
-        });
-
-        setUserInfo();
     }
 
     private void setUserInfo() {
