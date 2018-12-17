@@ -95,6 +95,16 @@ public class ProductListAdapter extends ArrayAdapter implements View.OnClickList
     }
 
     @Override
+    public void add(@Nullable Object object) {
+        super.add(object);
+        Product product = (Product) object;
+        ItemInfo ii = new ItemInfo();
+        ii.product = product;
+        ii.isSelected = false;
+        itemInfos.add(ii);
+    }
+
+    @Override
     public Object getItem(int position) {
         return itemInfos.get(position);
     }

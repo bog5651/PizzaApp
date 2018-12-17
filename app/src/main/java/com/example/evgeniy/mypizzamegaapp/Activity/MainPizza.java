@@ -1,21 +1,28 @@
 package com.example.evgeniy.mypizzamegaapp.Activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.evgeniy.mypizzamegaapp.Adapters.PizzaListAdapter;
+import com.example.evgeniy.mypizzamegaapp.Dialogs.AppProductDialog;
 import com.example.evgeniy.mypizzamegaapp.Helpers.RequestHelper;
 import com.example.evgeniy.mypizzamegaapp.Helpers.SharedPreferencesHelper;
 import com.example.evgeniy.mypizzamegaapp.Models.Pizza;
+import com.example.evgeniy.mypizzamegaapp.Models.Product;
 import com.example.evgeniy.mypizzamegaapp.Models.User;
 import com.example.evgeniy.mypizzamegaapp.R;
 
@@ -31,6 +38,7 @@ public class MainPizza extends AppCompatActivity {
     private ListView lvPizzas;
     private Button btnLogout;
     private Button btnAddPizza;
+    private Button btnAddProduct;
 
     private PizzaListAdapter pizzaAdapter;
 
@@ -73,6 +81,15 @@ public class MainPizza extends AppCompatActivity {
             }
         });
 
+        btnAddProduct = findViewById(R.id.btnAddProduct);
+        btnAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppProductDialog dialog = new AppProductDialog(context);
+                dialog.show();
+            }
+        });
+
         btnAddPizza = findViewById(R.id.btnAddPizza);
         btnAddPizza.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,8 +121,7 @@ public class MainPizza extends AppCompatActivity {
         super.onResume();
     }
 
-    private void setPizzasInfo()
-    {
+    private void setPizzasInfo() {
         RequestHelper.apiGetPizza(SharedPreferencesHelper.getToken(this), null, new RequestHelper.ApiInterface.onCompleteGetPizza() {
             @Override
             public void onSuccess(ArrayList<Pizza> p) {

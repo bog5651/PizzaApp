@@ -30,4 +30,24 @@
         android:layout_marginEnd="11dp"
         android:layout_marginTop="5dp"
         android:text="@string/error" />
+
+    <Switch
+        android:id="@+id/swEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="25dp"
+        android:layout_marginStart="19dp"
+        android:text="редактировать" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btnBack"
+        android:layout_marginEnd="122dp"
+        android:text="add"
+        android:visibility="gone" />
 </RelativeLayout>
