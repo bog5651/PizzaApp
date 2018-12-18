@@ -464,7 +464,7 @@ public class RequestHelper {
             jsonProduct.put("unit", product.unit);
             jsonProduct.put("cost", product.cost);
 
-            JSONtoSend.put("product",jsonProduct);
+            JSONtoSend.put("product", jsonProduct);
         } catch (JSONException e) {
             Log.e(TAG, "onClick: exn " + e.getMessage());
             callback.onFail("Ошибка вложения продукта" + e.getMessage());
@@ -520,7 +520,7 @@ public class RequestHelper {
             callback.onFail("Ошибка вложения продукта");
             return;
         }
-        getter.execute(host + UrlPizzaStructure, JSONtoSend.toString());
+        getter.execute(host + UrlRemoveProductFromPizza, JSONtoSend.toString());
     }
 
     private static String formatError(JSONObject error) throws JSONException {
