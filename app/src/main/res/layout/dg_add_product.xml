@@ -3,77 +3,93 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etName"
+    <FrameLayout
+        android:id="@+id/fl"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Название" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etName"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="0" />
+        <RelativeLayout
+            android:id="@+id/rlMain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
 
-    <EditText
-        android:id="@+id/etUnit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/etCost"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="ед. измерения" />
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:hint="Название"
+                android:inputType="textPersonName" />
 
-    <Button
-        android:id="@+id/btnAdd"
-        android:layout_width="109dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/etName"
-        android:layout_below="@+id/etUnit"
-        android:text="Добавить" />
+            <EditText
+                android:id="@+id/etCost"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etName"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:hint="Цена"
+                android:inputType="number" />
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="105dp"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/etName"
-        android:layout_below="@+id/etUnit"
-        android:text="Назад" />
+            <EditText
+                android:id="@+id/etUnit"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/etCost"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:hint="Ед. измерения"
+                android:inputType="textPersonName" />
+        </RelativeLayout>
 
-    <TextView
-        android:id="@+id/tvName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/etName"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="12dp"
-        android:text="Название"
-        android:textColor="@android:color/black" />
+        <RelativeLayout
+            android:id="@+id/rlProductList"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
 
-    <TextView
-        android:id="@+id/tvCost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/etCost"
-        android:layout_alignStart="@+id/tvName"
-        android:text="Цена"
-        android:textColor="@android:color/black" />
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
 
-    <TextView
-        android:id="@+id/tvUnit"
-        android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/etCount"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/spinner"
+                android:layout_marginTop="10dp"
+                android:ems="10"
+                android:hint="Кол-во"
+                android:inputType="textPersonName"
+                android:visibility="visible" />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/flButtons"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/etUnit"
-        android:layout_alignStart="@+id/tvName"
-        android:text="Ед. измер"
-        android:textColor="@android:color/black" />
+        android:layout_below="@+id/fl">
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="Добавить" />
+
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/btnAdd"
+            android:text="Назад" />
+    </RelativeLayout>
+
 
 </RelativeLayout>

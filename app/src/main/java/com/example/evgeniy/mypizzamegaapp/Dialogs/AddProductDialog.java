@@ -9,24 +9,37 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.evgeniy.mypizzamegaapp.Adapters.Spinners.ProductSpinnerAdapter;
 import com.example.evgeniy.mypizzamegaapp.Helpers.RequestHelper;
 import com.example.evgeniy.mypizzamegaapp.Helpers.SharedPreferencesHelper;
 import com.example.evgeniy.mypizzamegaapp.Models.Product;
 import com.example.evgeniy.mypizzamegaapp.R;
+
+import java.util.ArrayList;
 
 public class AddProductDialog extends Dialog {
 
     private EditText etName;
     private EditText etCost;
     private EditText etUnit;
+    private EditText etCount;
+
+    private RelativeLayout rlMain;
+    private RelativeLayout rlProductList;
+
+    private Spinner spinner;
 
     private Button btnAdd;
     private Button btnBack;
 
     private boolean addInPizza;
     private Integer pizzaId;
+
+    private ProductSpinnerAdapter adapter;
 
     private onClickListener onClickListener;
 
@@ -42,7 +55,6 @@ public class AddProductDialog extends Dialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.dg_add_product);
         setTitle("Добавить пиццу");
         Window window = getWindow();
@@ -51,23 +63,33 @@ public class AddProductDialog extends Dialog {
         etName = findViewById(R.id.etName);
         etCost = findViewById(R.id.etCost);
         etUnit = findViewById(R.id.etUnit);
+        etCount = findViewById(R.id.etCount);
+
+        rlMain = findViewById(R.id.rlMain);
+        rlProductList = findViewById(R.id.rlProductList);
+
+        spinner = findViewById(R.id.spinner);
 
         btnAdd = findViewById(R.id.btnAdd);
         btnBack = findViewById(R.id.btnBack);
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = etName.getText().toString().trim();
-                String cost = etCost.getText().toString().trim();
-                String unit = etUnit.getText().toString().trim();
+        if (!addInPizza) {
+            rlProductList.setVisibility(View.GONE);
+            rlMain.setVisibility(View.VISIBLE);
 
-                final Product product;
-                if (!cost.equals("") && !name.equals("") && !unit.equals("")) {
-                    product = new Product(name, Integer.parseInt(cost), unit);
-                } else
-                    return;
-                if (!addInPizza) {
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String name = etName.getText().toString().trim();
+                    String cost = etCost.getText().toString().trim();
+                    String unit = etUnit.getText().toString().trim();
+
+                    final Product product;
+                    if (!cost.equals("") && !name.equals("") && !unit.equals("")) {
+                        product = new Product(name, Integer.parseInt(cost), unit);
+                    } else
+                        return;
+
                     RequestHelper.apiAddProduct(SharedPreferencesHelper.getToken(context), product, new RequestHelper.ApiInterface.onCompleteWithResult() {
                         @Override
                         public void onSuccess(String result) {
@@ -82,12 +104,34 @@ public class AddProductDialog extends Dialog {
                         }
                     });
                 }
-                else
-                {
-                    //TODO запрос на добавление продукта в пицце
+            });
+        } else {
+            rlMain.setVisibility(View.GONE);
+            rlProductList.setVisibility(View.VISIBLE);
+            
+            btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Product product = (Product) adapter.getItem(spinner.getSelectedItemPosition());
+                    //TODO запрос на добавление в пиццу
                 }
+            });
+        }
+
+        RequestHelper.apiGetProduct(SharedPreferencesHelper.getToken(context), null, new RequestHelper.ApiInterface.onCompleteGetProductList() {
+            @Override
+            public void onSuccess(ArrayList<Product> products) {
+                adapter = new ProductSpinnerAdapter(context, products);
+                spinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFail(String error) {
+                Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                dismiss();
             }
         });
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
