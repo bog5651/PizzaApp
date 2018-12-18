@@ -19,6 +19,7 @@ public class RequestHelper {
 
     //private static final String host = "http://192.168.0.62"; //локальная сеть
     private static final String host = "http://192.168.33.10"; //локальная машина
+    //private static final String host = ""//глобальная машина
     private static final String UrlLogin = "/api/login";
     private static final String UrlUser = "/api/user";
     private static final String UrlPizza = "/api/pizza";
@@ -28,6 +29,7 @@ public class RequestHelper {
     private static final String UrlProduct = "/api/product";
     private static final String UrlAddPizza = "/api/addPizza";
     private static final String UrlAddProduct = "/api/addProduct";
+    private static final String UrlRemoveProductFromPizza = "/api/removeProductFromPizza";
 
     public static void apiLogin(String login, String password, final ApiInterface.onCompleteWithResult callback) {
         GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
@@ -470,6 +472,55 @@ public class RequestHelper {
         }
         Log.d(TAG, "apiAddProduct: " + JSONtoSend.toString());
         getterJSON.execute(host + UrlAddProduct, JSONtoSend.toString());
+    }
+
+    public static void apiRemoveProductFromPizza(String token, int pizzaId, int productId, final ApiInterface.onComplete callback) {
+        GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCompleteWithResult: " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("token", token);
+        } catch (JSONException e) {
+            Log.e(TAG, "apiGetPizzaStructure: exp " + e.getMessage());
+            callback.onFail("Ошибка вложения токена");
+            return;
+        }
+        try {
+            JSONObject product = new JSONObject();
+
+            product.put("pizza_id", pizzaId);
+            product.put("product_id", productId);
+
+            JSONtoSend.put("product", product);
+        } catch (JSONException e) {
+            Log.d(TAG, "apiGetPizzaStructure: " + e.getMessage());
+            callback.onFail("Ошибка вложения продукта");
+            return;
+        }
+        getter.execute(host + UrlPizzaStructure, JSONtoSend.toString());
     }
 
     private static String formatError(JSONObject error) throws JSONException {

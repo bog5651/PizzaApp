@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.evgeniy.mypizzamegaapp.Adapters.PizzaStructureAdapter;
-import com.example.evgeniy.mypizzamegaapp.Dialogs.AppProductDialog;
+import com.example.evgeniy.mypizzamegaapp.Dialogs.AddProductDialog;
 import com.example.evgeniy.mypizzamegaapp.Helpers.RequestHelper;
 import com.example.evgeniy.mypizzamegaapp.Helpers.SharedPreferencesHelper;
 import com.example.evgeniy.mypizzamegaapp.Models.Product;
@@ -62,9 +62,9 @@ public class PizzaStructure extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppProductDialog dialog = new AppProductDialog(context);
+                AddProductDialog dialog = new AddProductDialog(context, true, pizzaId);
                 dialog.show();
-                dialog.setOnClickListener(new AppProductDialog.onClickListener() {
+                dialog.setOnClickListener(new AddProductDialog.onClickListener() {
                     @Override
                     public void onClickAdd(Product product) {
                         adapter.add(product);
@@ -102,7 +102,17 @@ public class PizzaStructure extends AppCompatActivity {
                 adapter = new PizzaStructureAdapter(context, products, new PizzaStructureAdapter.onItemRemove() {
                     @Override
                     public void onDelete(int productId) {
-                        //TODO написать запрос удаления продукта из пиццы
+                        RequestHelper.apiRemoveProductFromPizza(SharedPreferencesHelper.getToken(context), pizzaId, productId, new RequestHelper.ApiInterface.onComplete() {
+                            @Override
+                            public void onSuccess() {
+                                Toast.makeText(context, "Продукт успешно удален", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onFail(String error) {
+                                Toast.makeText(context, error, Toast.LENGTH_LONG).show();
+                            }
+                        });
                     }
                 });
                 lvPizzaStruct.setAdapter(adapter);

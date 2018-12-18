@@ -16,7 +16,7 @@ import com.example.evgeniy.mypizzamegaapp.Helpers.SharedPreferencesHelper;
 import com.example.evgeniy.mypizzamegaapp.Models.Product;
 import com.example.evgeniy.mypizzamegaapp.R;
 
-public class AppProductDialog extends Dialog {
+public class AddProductDialog extends Dialog {
 
     private EditText etName;
     private EditText etCost;
@@ -25,13 +25,18 @@ public class AppProductDialog extends Dialog {
     private Button btnAdd;
     private Button btnBack;
 
+    private boolean addInPizza;
+    private Integer pizzaId;
+
     private onClickListener onClickListener;
 
     private Context context;
 
-    public AppProductDialog(@NonNull Context context) {
+    public AddProductDialog(@NonNull Context context, boolean addInPizza, Integer pizzaId) {
         super(context);
         this.context = context;
+        this.addInPizza = addInPizza;
+        this.pizzaId = pizzaId;
     }
 
     @Override
@@ -62,20 +67,25 @@ public class AppProductDialog extends Dialog {
                     product = new Product(name, Integer.parseInt(cost), unit);
                 } else
                     return;
+                if (!addInPizza) {
+                    RequestHelper.apiAddProduct(SharedPreferencesHelper.getToken(context), product, new RequestHelper.ApiInterface.onCompleteWithResult() {
+                        @Override
+                        public void onSuccess(String result) {
+                            Toast.makeText(context, "Продукт успешно добавлен", Toast.LENGTH_LONG).show();
+                            if (onClickListener != null)
+                                onClickListener.onClickAdd(product);
+                        }
 
-                RequestHelper.apiAddProduct(SharedPreferencesHelper.getToken(context), product, new RequestHelper.ApiInterface.onCompleteWithResult() {
-                    @Override
-                    public void onSuccess(String result) {
-                        Toast.makeText(context, "Продукт успешно добавлен", Toast.LENGTH_LONG).show();
-                        if (onClickListener != null)
-                            onClickListener.onClickAdd(product);
-                    }
-
-                    @Override
-                    public void onFail(String error) {
-                        Toast.makeText(context, "Продукт успешно НЕ добавлен\n" + error, Toast.LENGTH_LONG).show();
-                    }
-                });
+                        @Override
+                        public void onFail(String error) {
+                            Toast.makeText(context, "Продукт успешно НЕ добавлен\n" + error, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+                else
+                {
+                    //TODO запрос на добавление продукта в пицце
+                }
             }
         });
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +100,7 @@ public class AppProductDialog extends Dialog {
 
     }
 
-    public void setOnClickListener(AppProductDialog.onClickListener onClickListener) {
+    public void setOnClickListener(AddProductDialog.onClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
