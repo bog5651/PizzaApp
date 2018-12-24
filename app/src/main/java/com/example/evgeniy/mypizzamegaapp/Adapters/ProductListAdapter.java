@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -15,24 +16,32 @@ import com.example.evgeniy.mypizzamegaapp.R;
 
 import java.util.ArrayList;
 
-public class ProductListAdapter extends ArrayAdapter implements View.OnClickListener {
+import static android.view.View.GONE;
+import static android.view.View.OnClickListener;
+import static android.view.View.VISIBLE;
+
+public class ProductListAdapter extends ArrayAdapter implements OnClickListener {
 
     private ArrayList<ItemInfo> itemInfos;
     private ArrayList<Product> products;
+    private boolean isEditeList;
+    public boolean isEdit;
 
     private Context context;
 
-    private onItemChecked callBack;
+    private onItemChecked callBackCheck;
+    private onItemRemove callBackDel;
 
     public class ItemInfo {
         public Product product;
         public boolean isSelected;
     }
 
-    public ProductListAdapter(@NonNull Context context, ArrayList<Product> products) {
+    public ProductListAdapter(@NonNull Context context, ArrayList<Product> products, boolean isEditList) {
         super(context, R.layout.product_list_item, products);
         this.products = products;
         this.context = context;
+        this.isEditeList = isEditList;
         itemInfos = new ArrayList<>();
         for (Product p : products) {
             ItemInfo itemInfo = new ItemInfo();
@@ -54,12 +63,30 @@ public class ProductListAdapter extends ArrayAdapter implements View.OnClickList
         if (rowView != null) {
             TextView tvProductName = rowView.findViewById(R.id.ProductName);
             TextView tvProductCount = rowView.findViewById(R.id.ProductCost);
+
             Switch swSelect = rowView.findViewById(R.id.swSelect);
+
+            ImageView imageView = rowView.findViewById(R.id.imageView);
+
             tvProductName.setText(String.valueOf(itemInfo.product.name));
             tvProductCount.setText(String.valueOf(itemInfo.product.cost));
+
             swSelect.setOnClickListener(this);
             swSelect.setTag(position);
             swSelect.setChecked(itemInfo.isSelected);
+
+            imageView.setOnClickListener(listener);
+
+            if (isEditeList) {
+                if (isEdit)
+                    imageView.setVisibility(VISIBLE);
+                else
+                    imageView.setVisibility(GONE);
+                swSelect.setVisibility(GONE);
+            } else {
+                imageView.setVisibility(GONE);
+                swSelect.setVisibility(VISIBLE);
+            }
         } else {
             rowView = new View(context);
         }
@@ -67,7 +94,11 @@ public class ProductListAdapter extends ArrayAdapter implements View.OnClickList
     }
 
     public void setOnItemChecked(onItemChecked callBack) {
-        this.callBack = callBack;
+        this.callBackCheck = callBack;
+    }
+
+    public void setCallBackDel(onItemRemove callBackDel) {
+        this.callBackDel = callBackDel;
     }
 
     @Override
@@ -78,11 +109,19 @@ public class ProductListAdapter extends ArrayAdapter implements View.OnClickList
         if (itemInfo.isSelected != aSwitch.isChecked()) {
             itemInfo.isSelected = aSwitch.isChecked();
         }
-        if (callBack != null) {
-            callBack.onSwitchChanged(itemInfo.product, aSwitch.isChecked());
+        if (callBackCheck != null) {
+            callBackCheck.onSwitchChanged(itemInfo.product, aSwitch.isChecked());
         }
-
     }
+
+    private OnClickListener listener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (callBackDel != null) {
+                callBackDel.onDelete((int) v.getTag());
+            }
+        }
+    };
 
     public ArrayList<Product> getSelectedProducts() {
         ArrayList<Product> selected = new ArrayList<>();
@@ -121,7 +160,15 @@ public class ProductListAdapter extends ArrayAdapter implements View.OnClickList
         return itemInfos.get(position).product.id;
     }
 
+    public void remove(int position) {
+        super.remove(getItem(position));
+    }
+
     public interface onItemChecked {
         void onSwitchChanged(Product product, boolean isSelected);
+    }
+
+    public interface onItemRemove {
+        void onDelete(int position);
     }
 }

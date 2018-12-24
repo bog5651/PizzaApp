@@ -23,4 +23,12 @@
         android:layout_height="wrap_content"
         android:layout_weight="10" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:visibility="gone"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
 </LinearLayout>

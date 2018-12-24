@@ -61,7 +61,7 @@ public class AddPizzaActivity extends AppCompatActivity {
         RequestHelper.apiGetProduct(SharedPreferencesHelper.getToken(context), null, new RequestHelper.ApiInterface.onCompleteGetProductList() {
             @Override
             public void onSuccess(ArrayList<Product> products) {
-                productListAdapter = new ProductListAdapter(context, products);
+                productListAdapter = new ProductListAdapter(context, products, false);
                 productListAdapter.setOnItemChecked(new ProductListAdapter.onItemChecked() {
                     @Override
                     public void onSwitchChanged(Product product, boolean isSelected) {

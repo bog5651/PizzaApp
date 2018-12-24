@@ -35,6 +35,7 @@
         <activity
             android:name=".Activity.AddPizzaActivity"
             android:label="Add Pizza" />
+        <activity android:name=".Activity.productAct" />
     </application>
 
 </manifest>

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.evgeniy.mypizzamegaapp.Adapters.PizzaListAdapter;
-import com.example.evgeniy.mypizzamegaapp.Dialogs.AddProductDialog;
 import com.example.evgeniy.mypizzamegaapp.Helpers.RequestHelper;
 import com.example.evgeniy.mypizzamegaapp.Helpers.SharedPreferencesHelper;
 import com.example.evgeniy.mypizzamegaapp.Models.Pizza;
@@ -79,8 +78,8 @@ public class MainPizza extends AppCompatActivity {
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddProductDialog dialog = new AddProductDialog(context);
-                dialog.show();
+                Intent intent = new Intent(context, productAct.class);
+                startActivity(intent);
             }
         });
 
