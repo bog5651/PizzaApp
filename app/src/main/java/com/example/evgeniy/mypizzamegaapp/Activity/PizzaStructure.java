@@ -62,12 +62,13 @@ public class PizzaStructure extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddProductDialog dialog = new AddProductDialog(context, true, pizzaId);
+                final AddProductDialog dialog = new AddProductDialog(context, true, pizzaId);
                 dialog.show();
                 dialog.setOnClickListener(new AddProductDialog.onClickListener() {
                     @Override
                     public void onClickAdd(Product product) {
                         adapter.add(product);
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -98,14 +99,17 @@ public class PizzaStructure extends AppCompatActivity {
 
         RequestHelper.apiGetPizzaStruct(SharedPreferencesHelper.getToken(this), pizzaId, new RequestHelper.ApiInterface.onCompleteGetProductList() {
             @Override
-            public void onSuccess(ArrayList<Product> products) {
+            public void onSuccess(final ArrayList<Product> products) {
                 adapter = new PizzaStructureAdapter(context, products, new PizzaStructureAdapter.onItemRemove() {
                     @Override
-                    public void onDelete(int productId) {
+                    public void onDelete(final int productId) {
                         RequestHelper.apiRemoveProductFromPizza(SharedPreferencesHelper.getToken(context), pizzaId, productId, new RequestHelper.ApiInterface.onComplete() {
                             @Override
                             public void onSuccess() {
-                                Toast.makeText(context, "Продукт успешно удален", Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Продукт успешно удален 1", Toast.LENGTH_LONG).show();
+                                adapter.removeProductByPos(productId);
+                                adapter.notifyDataSetInvalidated();
+                                adapter.notifyDataSetChanged();
                             }
 
                             @Override

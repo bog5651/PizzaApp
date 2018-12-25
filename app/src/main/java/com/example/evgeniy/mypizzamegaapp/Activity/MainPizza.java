@@ -95,15 +95,15 @@ public class MainPizza extends AppCompatActivity {
         setPizzasInfo();
 
         lvPizzas = findViewById(R.id.lvPizzas);
-        lvPizzas.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ItemInfo itemInfo = pizzaAdapter.getItemInfo(position);
-                Intent intent = new Intent(context, PizzaStructure.class);
-                intent.putExtra("pizzaId", itemInfo.pizza.PizzaId);
-                startActivity(intent);
-            }
-        });
+//        lvPizzas.setOnItemClickListener(new OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                ItemInfo itemInfo = pizzaAdapter.getItemInfo(position);
+//                Intent intent = new Intent(context, PizzaStructure.class);
+//                intent.putExtra("pizzaId", itemInfo.pizza.PizzaId);
+//                startActivity(intent);
+//            }
+//        });
 
         setUserInfo();
     }

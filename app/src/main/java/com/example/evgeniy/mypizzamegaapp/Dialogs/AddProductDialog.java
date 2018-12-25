@@ -108,12 +108,25 @@ public class AddProductDialog extends Dialog {
         } else {
             rlMain.setVisibility(View.GONE);
             rlProductList.setVisibility(View.VISIBLE);
-            
+
             btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Product product = (Product) adapter.getItem(spinner.getSelectedItemPosition());
-                    //TODO запрос на добавление в пиццу
+                    final Product product = (Product) adapter.getItem(spinner.getSelectedItemPosition());
+                    product.count = Integer.parseInt(etCount.getText().toString().trim());
+                    RequestHelper.apiAddProductInPizza(SharedPreferencesHelper.getToken(context), pizzaId, product.id, product.count, new RequestHelper.ApiInterface.onComplete() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(context, "Успешно добавлено", Toast.LENGTH_LONG).show();
+                            onClickListener.onClickAdd(product);
+                            dismiss();
+                        }
+
+                        @Override
+                        public void onFail(String error) {
+                            Toast.makeText(context, "Успешно не добавлено \n " + error, Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             });
         }

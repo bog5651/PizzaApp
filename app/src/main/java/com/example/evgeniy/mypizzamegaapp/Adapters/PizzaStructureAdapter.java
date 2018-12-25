@@ -3,6 +3,7 @@ package com.example.evgeniy.mypizzamegaapp.Adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,7 @@ public class PizzaStructureAdapter extends ArrayAdapter {
             ImageView iv = rowView.findViewById(R.id.ivDelete);
             iv.setTag(position);
             iv.setOnClickListener(listener);
-            if(isEdit)
+            if (isEdit)
                 iv.setVisibility(View.VISIBLE);
             else
                 iv.setVisibility(View.GONE);
@@ -64,9 +65,21 @@ public class PizzaStructureAdapter extends ArrayAdapter {
         @Override
         public void onClick(View v) {
             if (onItemRemove != null)
-                onItemRemove.onDelete((int) v.getTag());
+                onItemRemove.onDelete(products.get((int) v.getTag()).id);
         }
     };
+
+    public void removeProductByPos(int pos) {
+        for(int i = 0;i<products.size();i++) {
+            Product product = products.get(pos);
+            if(product.id == pos) {
+                products.remove(product);
+                notifyDataSetChanged();
+                notifyDataSetInvalidated();
+                return;
+            }
+        }
+    }
 
     public interface onItemRemove {
         void onDelete(int productId);

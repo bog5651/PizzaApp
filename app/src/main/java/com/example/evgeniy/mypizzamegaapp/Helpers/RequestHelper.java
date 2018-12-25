@@ -29,6 +29,7 @@ public class RequestHelper {
     private static final String UrlPizzaStructure = "/api/PizzaStructute";
     private static final String UrlAddPizza = "/api/addPizza";
     private static final String UrlRemoveProductFromPizza = "/api/removeProductFromPizza";
+    private static final String UrlAddProductFromPizza = "/api/addProductInPizza";
 
     private static final String UrlProduct = "/api/product";
     private static final String UrlAddProduct = "/api/addProduct";
@@ -189,6 +190,7 @@ public class RequestHelper {
                             } catch (JSONException e) {
                                 Log.d(TAG, "onComplete: " + e.getMessage());
                             }
+                            product.id = JSONPizzas.getJSONObject(i).getInt("id");
                             product.name = JSONPizzas.getJSONObject(i).getString("product_name");
                             product.cost = JSONPizzas.getJSONObject(i).getInt("cost");
                             product.unit = JSONPizzas.getJSONObject(i).getString("unit");
@@ -526,7 +528,58 @@ public class RequestHelper {
             callback.onFail("Ошибка вложения продукта");
             return;
         }
+        Log.d(TAG, "apiGetPizzaStructure: " + JSONtoSend.toString());
         getter.execute(host + UrlRemoveProductFromPizza, JSONtoSend.toString());
+    }
+
+    public static void apiAddProductInPizza(String token, int pizzaId, int productId, int count, final ApiInterface.onComplete callback) {
+        GetterJSON getter = new GetterJSON(null, null, new GetterJSON.onCompleteEventHandler() {
+            @Override
+            public void onComplete(String Json) {
+                if (Json == null) {
+                    callback.onFail("Internet Error");
+                    return;
+                }
+                try {
+                    JSONObject result = new JSONObject(Json);
+                    if (result.getInt("success") == 1) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onFail(formatError(result.getJSONObject("error")));
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "onCompleteWithResult: " + e.getMessage());
+                    callback.onFail(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFail(String error) {
+                callback.onFail(error);
+            }
+        });
+        JSONObject JSONtoSend = new JSONObject();
+        try {
+            JSONtoSend.put("token", token);
+        } catch (JSONException e) {
+            Log.e(TAG, "apiGetPizzaStructure: exp " + e.getMessage());
+            callback.onFail("Ошибка вложения токена");
+            return;
+        }
+        try {
+            JSONObject product = new JSONObject();
+
+            product.put("pizza_id", pizzaId);
+            product.put("product_id", productId);
+            product.put("count", count);
+
+            JSONtoSend.put("product", product);
+        } catch (JSONException e) {
+            Log.d(TAG, "apiGetPizzaStructure: " + e.getMessage());
+            callback.onFail("Ошибка вложения продукта");
+            return;
+        }
+        getter.execute(host + UrlAddProductFromPizza, JSONtoSend.toString());
     }
 
     public static void apiRemoveProduct(String token, int productId, final ApiInterface.onComplete callback) {
