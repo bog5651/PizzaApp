@@ -50,7 +50,7 @@ public class productAct extends AppCompatActivity {
                 adapter.setCallBackDel(new ProductListAdapter.onItemRemove() {
                     @Override
                     public void onDelete(final int position) {
-                        Product product = (Product) adapter.getItem(position);
+                        Product product = adapter.getProduct(position);
                         RequestHelper.apiRemoveProduct(SharedPreferencesHelper.getToken(context), product.id, new RequestHelper.ApiInterface.onComplete() {
                             @Override
                             public void onSuccess() {
@@ -66,10 +66,12 @@ public class productAct extends AppCompatActivity {
                         });
                     }
                 });
+                lvList.setAdapter(adapter);
             }
 
             @Override
             public void onFail(String error) {
+                Toast.makeText(context, error, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "onSuccess: " + error);
             }
         });
@@ -91,7 +93,21 @@ public class productAct extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddProductDialog dialog = new AddProductDialog(context, false, null);
+                final AddProductDialog dialog = new AddProductDialog(context, false, null);
+                dialog.setOnClickListener(new AddProductDialog.onClickListener() {
+                    @Override
+                    public void onClickAdd(Product product) {
+                        adapter.add(product);
+                        adapter.notifyDataSetInvalidated();
+                        adapter.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public void onClickBack() {
+
+                    }
+                });
                 dialog.show();
             }
         });

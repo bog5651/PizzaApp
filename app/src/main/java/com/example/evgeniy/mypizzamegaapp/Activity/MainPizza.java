@@ -112,6 +112,7 @@ public class MainPizza extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        setPizzasInfo();
     }
 
     private void setPizzasInfo() {

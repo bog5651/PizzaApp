@@ -25,7 +25,7 @@ public class ProductListAdapter extends ArrayAdapter implements OnClickListener 
     private ArrayList<ItemInfo> itemInfos;
     private ArrayList<Product> products;
     private boolean isEditeList;
-    public boolean isEdit;
+    public boolean isEdit = false;
 
     private Context context;
 
@@ -76,6 +76,7 @@ public class ProductListAdapter extends ArrayAdapter implements OnClickListener 
             swSelect.setChecked(itemInfo.isSelected);
 
             imageView.setOnClickListener(listener);
+            imageView.setTag(position);
 
             if (isEditeList) {
                 if (isEdit)
@@ -146,6 +147,11 @@ public class ProductListAdapter extends ArrayAdapter implements OnClickListener 
     @Override
     public Object getItem(int position) {
         return itemInfos.get(position);
+    }
+
+    public Product getProduct(int pos)
+    {
+        return itemInfos.get(pos).product;
     }
 
     // кол-во элементов

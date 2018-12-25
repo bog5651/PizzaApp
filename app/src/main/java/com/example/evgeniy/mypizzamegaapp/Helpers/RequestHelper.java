@@ -19,7 +19,7 @@ public class RequestHelper {
 
     //private static final String host = "http://192.168.0.62"; //локальная сеть
     private static final String host = "http://192.168.33.10"; //локальная машина
-    //private static final String host = ""//глобальная машина
+
     private static final String UrlLogin = "/api/login";
     private static final String UrlUser = "/api/user";
     private static final String UrlRegister = "/api/register";
@@ -228,6 +228,7 @@ public class RequestHelper {
                 return;
             }
         }
+        Log.d(TAG, "apiGetProduct: " + JSONtoSend.toString());
         getter.execute(host + UrlProduct, JSONtoSend.toString());
     }
 
@@ -571,6 +572,7 @@ public class RequestHelper {
             callback.onFail("Ошибка вложения продукта");
             return;
         }
+        Log.d(TAG, "apiRemoveProduct: " + JSONtoSend.toString());
         getter.execute(host + UrlRemoveProduct, JSONtoSend.toString());
     }
 
